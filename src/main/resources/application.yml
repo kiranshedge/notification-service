@@ -1,5 +1,6 @@
 server:
-  port: 8080
+  port: 8083
+
 spring:
   application:
     name: notification-service
@@ -11,8 +12,25 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+  zipkin:
+    base-url: http://zipkin:9411
+    enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0   # 100% of requests traced for dev/test (lower for prod)
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,info,metrics,prometheus,loggers,threaddump
+  endpoint:
+    health:
+      show-details: always
